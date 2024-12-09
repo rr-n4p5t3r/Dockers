@@ -1,5 +1,5 @@
 import subprocess
-import json 
+import json
 import re
 from flask import Flask, render_template, request, redirect
 import docker
@@ -21,7 +21,6 @@ def get_containers():
         })
     return containers
 
-
 # Obtener imágenes
 def get_images():
     result = subprocess.run(['docker', 'images', '--format', '{{.Repository}} {{.Tag}} {{.ID}} {{.CreatedSince}} {{.Size}}'], capture_output=True, text=True)
@@ -30,27 +29,22 @@ def get_images():
     for line in result.stdout.splitlines():
         repo, tag, image_id, created_since, size = line.split(maxsplit=4)
 
-        # Manejar imágenes sin etiqueta
         if tag == '<none>':
             tag = 'Sin etiqueta'
 
-        # Eliminar texto adicional de "hours ago", "days ago", etc. y convertir el tamaño a número
         size_value = 0.0
-        # Usamos expresiones regulares para extraer el valor numérico y la unidad
         match = re.search(r'(\d+(\.\d+)?)\s*(GB|MB|KB)?', size.strip())
         if match:
             number = float(match.group(1))
             unit = match.group(3)
-
-            # Convertir según la unidad
             if unit == 'GB':
-                size_value = number * 1024  # Convertir GB a MB
+                size_value = number * 1024
             elif unit == 'MB':
                 size_value = number
             elif unit == 'KB':
-                size_value = number / 1024  # Convertir KB a MB
+                size_value = number / 1024
             else:
-                size_value = number  # Sin unidad, asumimos MB por defecto
+                size_value = number
 
         images.append({
             'Repository': repo,
@@ -79,6 +73,42 @@ def control_container(container_name):
     elif action == 'restart':
         subprocess.run(['docker', 'restart', container_name])
 
+    return redirect('/')
+
+@app.route('/delete_container/<container_id>', methods=['POST'])
+def delete_container(container_id):
+    try:
+        container = docker_client.containers.get(container_id)
+        container.remove(force=True)
+    except Exception as e:
+        print(f"Error al eliminar el contenedor: {e}")
+    return redirect('/')
+
+@app.route('/delete_image/<image_id>', methods=['POST'])
+def delete_image(image_id):
+    try:
+        docker_client.images.remove(image_id, force=True)
+    except Exception as e:
+        print(f"Error al eliminar la imagen: {e}")
+    return redirect('/')
+
+@app.route('/pull_image', methods=['POST'])
+def pull_image():
+    image_name = request.form.get('image_name')
+    try:
+        docker_client.images.pull(image_name)
+    except Exception as e:
+        print(f"Error al descargar la imagen: {e}")
+    return redirect('/')
+
+@app.route('/load_image', methods=['POST'])
+def load_image():
+    image_path = request.form.get('image_path')
+    try:
+        with open(image_path, 'rb') as image_file:
+            docker_client.images.load(image_file.read())
+    except Exception as e:
+        print(f"Error al cargar la imagen: {e}")
     return redirect('/')
 
 if __name__ == '__main__':

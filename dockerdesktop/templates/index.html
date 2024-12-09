@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Docker Dashboard</title>
-    <!-- Vincula el archivo CSS desde la carpeta static utilizando url_for -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -27,16 +26,13 @@
                         <td>{{ container.Names }}</td>
                         <td>{{ container.Image }}</td>
                         <td class="{% if container.Status == 'running' %}status-running{% elif container.Status == 'exited' %}status-exited{% else %}status-other{% endif %}">
-                            {% if container.Status == 'running' %}
-                                En ejecución
-                            {% elif container.Status == 'exited' %}
-                                Detenido
-                            {% else %}
-                                {{ container.Status }}
-                            {% endif %}
+                            {{ 'En ejecución' if container.Status == 'running' else 'Detenido' if container.Status == 'exited' else container.Status }}
                         </td>
                         <td>
-                            <form action="/control/{{ container.Names }}" method="POST">
+                            <form action="/delete_container/{{ container.ID }}" method="POST" style="display:inline;">
+                                <button type="submit">Eliminar</button>
+                            </form>
+                            <form action="/control/{{ container.Names }}" method="POST" style="display:inline;">
                                 <button type="submit" name="action" value="start">Encender</button>
                                 <button type="submit" name="action" value="stop">Apagar</button>
                                 <button type="submit" name="action" value="restart">Reiniciar</button>
@@ -61,6 +57,7 @@
                 <th>ID de Imagen</th>
                 <th>Creada</th>
                 <th>Tamaño</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -71,11 +68,44 @@
                     <td>{{ image.ImageID }}</td>
                     <td>{{ image.CreatedSince }}</td>
                     <td>{{ image.Size | round(2) }} MB</td>
+                    <td>
+                        <form action="/delete_image/{{ image.ImageID }}" method="POST" style="display:inline;">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
-
+    <h2>Gestión de Imágenes</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Opción</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Instalar una nueva imagen</td>
+                <td>
+                    <form action="/pull_image" method="POST">
+                        <input type="text" name="image_name" placeholder="Nombre de la imagen (e.g., nginx:latest)" required>
+                        <button type="submit">Descargar</button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td>Cargar una imagen desde archivo</td>
+                <td>
+                    <form action="/load_image" method="POST">
+                        <input type="text" name="image_path" placeholder="Ruta del archivo .tar" required>
+                        <button type="submit">Cargar</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
