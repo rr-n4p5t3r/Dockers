@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  nextcloud:
+    build: .
+    container_name: nextcloud
+    ports:
+      - "8080:80"
+    volumes:
+      - nextcloud_data:/var/www/html/nextcloud
+    environment:
+      - MYSQL_PASSWORD=nextcloud_password
+      - MYSQL_USER=nextcloud_user
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_HOST=db
+    depends_on:
+      - db
+    networks:
+      - nextcloud_network
+
+  db:
+    image: mariadb:10.6
+    container_name: nextcloud-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud_user
+      - MYSQL_PASSWORD=nextcloud_password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - nextcloud_network
+
+volumes:
+  nextcloud_data:
+  db_data:
+
+networks:
+  nextcloud_network:
+    driver: bridge
