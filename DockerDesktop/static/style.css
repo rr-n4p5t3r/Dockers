@@ -1,0 +1,106 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+/* Table styles */
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Header and Data cell styles */
+th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+/* Action buttons */
+button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+button[type="submit"] {
+    background-color: #f4f4f9;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+button[type="submit"]:active {
+    background-color: #ddd;
+}
+
+/* Status styling */
+.status-running {
+    color: green;
+    font-weight: bold;
+}
+
+.status-exited {
+    color: red;
+    font-weight: bold;
+}
+
+.status-other {
+    color: orange;
+}
+
+/* Additional styling for image table */
+td:first-child {
+    color: #3a6cc1;  /* Azul para el repositorio */
+}
+
+td:nth-child(3) {
+    color: #e76f51;  /* Naranja para el ID de imagen */
+}
+
+td {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Highlighted text in the last column */
+td:last-child {
+    font-weight: bold;
+    color: #2c6f2f;
+}
+
+/* Row hover effect */
+tr:hover {
+    background-color: #f0f0f0;
+}

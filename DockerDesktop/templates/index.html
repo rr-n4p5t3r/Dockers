@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Dashboard</title>
+    <!-- Vincula el archivo CSS desde la carpeta static utilizando url_for -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Docker Dashboard</h1>
+
+    <h2>Contenedores</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Contenedor</th>
+                <th>Imagen</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if containers %}
+                {% for container in containers %}
+                    <tr>
+                        <td>{{ container.Names }}</td>
+                        <td>{{ container.Image }}</td>
+                        <td class="{% if container.Status == 'running' %}status-running{% elif container.Status == 'exited' %}status-exited{% else %}status-other{% endif %}">
+                            {% if container.Status == 'running' %}
+                                En ejecución
+                            {% elif container.Status == 'exited' %}
+                                Detenido
+                            {% else %}
+                                {{ container.Status }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form action="/control/{{ container.Names }}" method="POST">
+                                <button type="submit" name="action" value="start">Encender</button>
+                                <button type="submit" name="action" value="stop">Apagar</button>
+                                <button type="submit" name="action" value="restart">Reiniciar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">No hay contenedores activos.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <h2>Imágenes de Docker</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Repositorio</th>
+                <th>Tag</th>
+                <th>ID de Imagen</th>
+                <th>Creada</th>
+                <th>Tamaño</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for image in images %}
+                <tr>
+                    <td>{{ image.Repository }}</td>
+                    <td>{{ image.Tag }}</td>
+                    <td>{{ image.ImageID }}</td>
+                    <td>{{ image.CreatedSince }}</td>
+                    <td>{{ image.Size | round(2) }} MB</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+</body>
+</html>
