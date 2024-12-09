@@ -90,9 +90,13 @@ python app.py
 ```
 dockerdesktop/
 ├── app.py                # Archivo principal de la aplicación
+├── script/docker.sh      # Script con dependencias necesarias
+├── static/style.css      # Hoja de estilo para la plantilla web
+├── templates/index.html  # Plantilla web de la aplicación
+├── venv/                 # Entorno virtual de la aplicación
+├── docker_manager.py     # Archivo de apoyo a través de la terminal
 ├── requirements.txt      # Dependencias necesarias para ejecutar la aplicación
 ├── README.md             # Este archivo
-└── ...
 ```
 
 ---
