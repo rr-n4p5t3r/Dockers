@@ -115,6 +115,13 @@ dockerdesktop/
 2. Verifica que Docker esté correctamente configurado en tu sistema.
 3. Si necesitas más ayuda, no dudes en contactarme a través de [mi correo](mailto:rrosero2000@gmail.com).
 
+### Invítame un café: ###
+<div id="badges">
+  <a href="https://www.buymeacoffee.com/elblogden4p5t3r" target="_blank">
+    <img src="https://img.shields.io/badge/buymeacoffee-yellow?style=for-the-badge&logo=buymeacoffee&logoColor=white" alt="LinkedIn Badge"/>
+  </a>
+</div>
+
 ---
 
 ¡Gracias por usar DockerDesktop! 😊
